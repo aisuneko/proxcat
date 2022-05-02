@@ -1,0 +1,5 @@
+src/__pycache__/
+src/proxcat.ini
+dist/
+proxcat.egg-info/
+.vscode/
