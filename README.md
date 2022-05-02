@@ -36,3 +36,8 @@ Or, clone repository and run `pip install .`.
    ```
 3. run the `proxcat` command.
 
+## Changelog
+see [CHANGELOG.md](CHANGELOG.md).
+
+## License
+[MIT](LICENSE)
