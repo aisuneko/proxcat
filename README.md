@@ -1,8 +1,12 @@
 # proxcat
 A htop-like status monitor for Proxmox VE servers, powered by python curses, with support for multiple nodes, VM (QEMU) and Container (LXC) status and node status.
 
+## Screenshot
+![connected to my own PVE server](screenshot.jpg)
 ## Installation
 Install dependencies: `pip install proxmoxer`
+
+Then install: `pip install proxcat`
 
 Or, clone repository and run `pip install .`. 
 
