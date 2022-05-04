@@ -1,6 +1,6 @@
 import datetime
 from .utils import convert_size
-
+from . import __version__ as version
 
 def build_node_info(instance, node):
     node_title = f"Node {node['node']} - {node['status']}"
@@ -84,5 +84,5 @@ def build_upper_status_bar(status_bar_item_length):
 
 def build_bottom_status_bar():
     local_time = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S %Z")
-    bottom_statusbar_str = f"proxcat alpha | 'q' to quit, 'n' 'p' to switch between nodes, any other key to force refresh | Local time {local_time}"
+    bottom_statusbar_str = f"proxcat {version} | 'q' to quit, 'n' 'p' to switch between nodes, any other key to force refresh | Local time {local_time}"
     return bottom_statusbar_str

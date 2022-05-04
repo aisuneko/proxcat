@@ -2,7 +2,6 @@ import curses
 from . import backend
 from .utils import handle
 
-
 class Pointer:
     def __init__(self):
         self.x = 0
@@ -32,6 +31,9 @@ def init(stdscr):
     stdscr.idlok(False)
     stdscr.scrollok(True)
     stdscr.nodelay(True)
+    stdscr.keypad(True)
+    curses.curs_set(0)
+    curses.noecho()
     curses.start_color()
     curses.init_pair(1, curses.COLOR_CYAN, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_BLACK)
