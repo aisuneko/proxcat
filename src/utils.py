@@ -9,6 +9,11 @@ if "XDG_CONFIG_HOME" in os.environ:
 
 config_path = os.path.join(conf_dir, "config.ini")
 
+norm_status_bar_strs = ["TYPE", "VMID", "NAME", "STATUS", "%CPU",
+                        "MEM", "%MEM", "DISK", "%DISK", "SWAP", "%SWAP", "UPTIME"]
+qemu_status_bar_strs = ["TYPE", "VMID", "NAME", "STATUS", "%CPU",
+                        "MEM", "%MEM", "DISK", "UPTIME"]
+
 
 def convert_size(size_bytes):  # convert from bytes to other units
     if size_bytes == 0:

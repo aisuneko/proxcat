@@ -31,7 +31,6 @@ def start():
                           token_value=account['Token'], verify_ssl=False)
     interval = int(settings['UpdateInterval']
                    ) if settings['UpdateInterval'] else 1000
-    print(interval)
     curses.wrapper(frontend.draw, instance, interval)
 
 

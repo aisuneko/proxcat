@@ -2,6 +2,7 @@ import curses
 from . import backend
 from .utils import handle
 
+
 class Pointer:
     def __init__(self):
         self.x = 0
@@ -96,17 +97,17 @@ def draw(stdscr, instance, update_interval):
         node = nodes[node_idx]
         node_info_str = backend.build_node_info(instance, node)
         vm_list = backend.build_vm_list(instance, node)
-        vm_status_list, status_bar_item_length = backend.build_vm_info(
+        vm_status_list, status_bar_item_length, is_qemu_only = backend.build_vm_info(
             vm_list)
         status_bar_str = backend.build_upper_status_bar(
-            status_bar_item_length)
+            status_bar_item_length, is_qemu_only)
         ptr = Pointer()
         height, width = stdscr.getmaxyx()
         stdscr.erase()
 
         print_node_info(stdscr, ptr, node_info_str, width)
         print_vm_info(stdscr, ptr, vm_status_list,
-                        status_bar_item_length, width)
+                      status_bar_item_length, width)
         print_bottom_status_bar(stdscr, width, height)
         print_upper_status_bar(
             stdscr, width, status_bar_str, len(node_info_str))

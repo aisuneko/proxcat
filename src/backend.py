@@ -1,6 +1,7 @@
 import datetime
-from .utils import convert_size
+from .utils import convert_size, norm_status_bar_strs, qemu_status_bar_strs
 from . import __version__ as version
+
 
 def build_node_info(instance, node):
     node_title = f"Node {node['node']} - {node['status']}"
@@ -25,7 +26,7 @@ def build_vm_list(instance, node):
     return vm_list
 
 
-def build_single_vm_info(vm):
+def build_single_vm_info(vm, is_qemu_only):
     identifier = "lxc" if (
         'type' in vm and vm['type'] == "lxc") else "qemu"
     if vm['status'] == "running":
@@ -41,7 +42,10 @@ def build_single_vm_info(vm):
                                 f"{convert_size(vm['swap'])}/{convert_size(vm['maxswap'])}", f"{vm['swap']/vm['maxswap']:.2%}"])
     else:
         status_bar_item.extend(
-            [f"{convert_size(vm['maxdisk'])} (total)", "", "", ""])
+            [f"{convert_size(vm['maxdisk'])} (total)"])
+        if not is_qemu_only:
+            status_bar_item.extend(
+                ["", "", ""])
     if vm['status'] == "running":
         status_bar_item.append(
             str(datetime.timedelta(seconds=vm['uptime'])))
@@ -50,14 +54,20 @@ def build_single_vm_info(vm):
 
 def build_vm_info(vm_list):
     vm_status_list = []
-    status_bar_item_length = [0] * 12
+    status_bar_item_length = [0] * len(norm_status_bar_strs)
+    is_qemu_only = True
+    for vm in vm_list:
+        if ('type' in vm and vm['type'] == "lxc"):
+            is_qemu_only = False
+            break
+
     for vm in vm_list:  # iterate vm
-        status_bar_item = build_single_vm_info(vm)
+        status_bar_item = build_single_vm_info(vm, is_qemu_only)
         vm_status_list.append(status_bar_item)
         for idx, val in enumerate(status_bar_item):
             status_bar_item_length[idx] = max(
                 status_bar_item_length[idx], len(str(val)))
-    return vm_status_list, status_bar_item_length
+    return vm_status_list, status_bar_item_length, is_qemu_only
 
 
 def build_vm_info_string(item, status_bar_item_length):
@@ -70,9 +80,8 @@ def build_vm_info_string(item, status_bar_item_length):
     return item_str
 
 
-def build_upper_status_bar(status_bar_item_length):
-    status_bar_strs = ["TYPE", "VMID", "NAME", "STATUS", "%CPU",
-                       "MEM", "%MEM", "DISK", "%DISK", "SWAP", "%SWAP", "UPTIME"]
+def build_upper_status_bar(status_bar_item_length, is_qemu_only):
+    status_bar_strs = qemu_status_bar_strs if is_qemu_only else norm_status_bar_strs
     statusbar_str = ""
     for idx, item in enumerate(status_bar_strs):
         statusbar_str = statusbar_str + item + " "
