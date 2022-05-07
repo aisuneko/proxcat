@@ -37,12 +37,16 @@ def build_single_vm_info(vm, is_qemu_only):
     else:
         status_bar_item = [identifier, vm['vmid'], vm['name'],
                            vm['status'], f"({vm['cpus']})", f"({convert_size(vm['maxmem'])})", ""]
-    if identifier == "lxc":  # container specific disk info
-        status_bar_item.extend([f"{convert_size(vm['disk'])}/{convert_size(vm['maxdisk'])}", f"{vm['disk']/vm['maxdisk']:.2%}",
-                                f"{convert_size(vm['swap'])}/{convert_size(vm['maxswap'])}", f"{vm['swap']/vm['maxswap']:.2%}"])
+    if identifier == "lxc" and not is_qemu_only:  # container specific disk info
+        if vm['status'] == "running":
+            status_bar_item.extend([f"{convert_size(vm['disk'])}/{convert_size(vm['maxdisk'])}", f"{vm['disk']/vm['maxdisk']:.2%}",
+                                    f"{convert_size(vm['swap'])}/{convert_size(vm['maxswap'])}", f"{vm['swap']/vm['maxswap']:.2%}"])
+        else:
+            status_bar_item.extend([f"({convert_size(vm['maxdisk'])})", "",
+                                    f"({convert_size(vm['maxswap'])})", ""])
     else:
         status_bar_item.extend(
-            [f"{convert_size(vm['maxdisk'])} (total)"])
+            [f"({convert_size(vm['maxdisk'])})"])
         if not is_qemu_only:
             status_bar_item.extend(
                 ["", "", ""])
