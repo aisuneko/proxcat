@@ -56,14 +56,15 @@ def build_single_vm_info(vm, is_qemu_only):
     return status_bar_item
 
 
-def build_vm_info(vm_list):
+def build_vm_info(vm_list, no_lxc):
     vm_status_list = []
     status_bar_item_length = [0] * len(norm_status_bar_strs)
     is_qemu_only = True
-    for vm in vm_list:
-        if ('type' in vm and vm['type'] == "lxc"):
-            is_qemu_only = False
-            break
+    if not no_lxc:
+        for vm in vm_list:
+            if ('type' in vm and vm['type'] == "lxc"):
+                is_qemu_only = False
+                break
 
     for vm in vm_list:  # iterate vm
         status_bar_item = build_single_vm_info(vm, is_qemu_only)

@@ -8,6 +8,7 @@ from . import frontend
 from . import utils
 from . import __version__ as version
 
+
 def start():
     config = configparser.ConfigParser()
     parser = argparse.ArgumentParser(
@@ -15,7 +16,9 @@ def start():
     parser.add_argument(
         "-c", "--config", help="Specify location of config file", type=str)
     parser.add_argument("-v", "--version",
-                        help="show version and exit", action="store_true")
+                        help="Show version and exit", action="store_true")
+    parser.add_argument("-l", "--no-lxc-only-info",
+                        help="Disable LXC-only info", action="store_true")
     args = parser.parse_args()
     path = utils.config_path
     if args.version:
@@ -23,6 +26,9 @@ def start():
         return
     if args.config:
         path = os.path.expanduser(args.d)
+    no_lxc = False
+    if args.no_lxc_only_info:
+        no_lxc = True
     config.read(path)
 
     account = config['Account']
@@ -31,7 +37,7 @@ def start():
                           token_value=account['Token'], verify_ssl=False)
     interval = int(settings['UpdateInterval']
                    ) if settings['UpdateInterval'] else 1000
-    curses.wrapper(frontend.draw, instance, interval)
+    curses.wrapper(frontend.draw, instance, interval, no_lxc)
 
 
 if __name__ == "__main__":
