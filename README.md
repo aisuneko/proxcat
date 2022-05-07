@@ -4,15 +4,13 @@ A htop-like status monitor for Proxmox VE servers, powered by python curses, wit
 ## Screenshot
 ![connected to my own PVE server](screenshot.jpg)
 ## Installation
-Install dependencies: `pip install proxmoxer`
-
-Then install: `pip install proxcat`
+`pip install proxmoxer proxcat`
 
 Or, clone repository and run `pip install .`. 
 
 ## Usage
-1. On your PVE server, create an API token in WebUI under Datacenter -> Permissions -> API Tokens. Remember to deselect "Priviledge Separation" (for this reason, it is recommended to use the app with a dedicated low-level user instead of root).
-2. Create a config file. The app will look for `config.ini` under
+1. On your PVE server, create an API token in WebUI under Datacenter -> Permissions -> API Tokens. Remember to deselect "Priviledge Separation". For security concerns, it is recommended to use it with a dedicated low-level user - for example, one with the "PVEAuditor" role assigned - instead of root or other administrators.
+2. Create a config file. `proxcat` will look for `config.ini` under
     - `$XDG_CONFIG_HOME/proxcat/` or
     - `~/.proxcat/`
 
@@ -23,7 +21,7 @@ Or, clone repository and run `pip install .`.
    [Account]
    # address of PVE host
    Host = 
-   # Username (format: <username>@<realm>)
+   # Username (format: <username>@<realm)
    User = 
    # name of your token
    TokenName = 
