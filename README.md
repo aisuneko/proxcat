@@ -33,7 +33,13 @@ Or, clone repository and run `pip install .`.
    UpdateInterval = 1000
    ```
 3. run the `proxcat` command.
-
+   > Keybindings:
+   > 
+   > `q` to quit
+   > 
+   > `n` `p` for switching between nodes
+   > 
+   > any other key for force refreshing screen
 ## Changelog
 see [CHANGELOG.md](CHANGELOG.md).
 
