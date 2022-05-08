@@ -1,5 +1,6 @@
 import datetime
-from .utils import convert_size, norm_status_bar_strs, qemu_status_bar_strs
+from .utils import convert_size
+from .const import norm_status_bar_strs, qemu_status_bar_strs
 from . import __version__ as version
 
 
@@ -66,7 +67,7 @@ def build_vm_info(vm_list, no_lxc):
                 is_qemu_only = False
                 break
 
-    for vm in vm_list:  # iterate vm
+    for vm in vm_list: 
         status_bar_item = build_single_vm_info(vm, is_qemu_only)
         vm_status_list.append(status_bar_item)
         for idx, val in enumerate(status_bar_item):
@@ -97,6 +98,6 @@ def build_upper_status_bar(status_bar_item_length, is_qemu_only):
 
 
 def build_bottom_status_bar():
-    local_time = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S %Z")
-    bottom_statusbar_str = f"proxcat {version} | 'q' to quit, 'n' 'p' to switch between nodes, any other key to force refresh | Local time {local_time}"
+    local_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S %Z")
+    bottom_statusbar_str = f"proxcat {version} | Local time {local_time}"
     return bottom_statusbar_str
