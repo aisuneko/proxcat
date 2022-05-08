@@ -67,7 +67,7 @@ def build_vm_info(vm_list, no_lxc):
                 is_qemu_only = False
                 break
 
-    for vm in vm_list: 
+    for vm in vm_list:
         status_bar_item = build_single_vm_info(vm, is_qemu_only)
         vm_status_list.append(status_bar_item)
         for idx, val in enumerate(status_bar_item):

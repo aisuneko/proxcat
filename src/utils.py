@@ -7,6 +7,7 @@ import argparse
 from .const import config_path
 from . import __version__ as version
 
+
 def convert_size(size_bytes):  # convert from bytes to other units
     if size_bytes == 0:
         return "0B"
@@ -25,6 +26,7 @@ def handle(f):
         except curses.error:
             pass
     return decorated
+
 
 def startup():
     parser = argparse.ArgumentParser(
