@@ -4,7 +4,7 @@ A htop-like status monitor for Proxmox VE servers, powered by python curses, wit
 ## Screenshot
 ![connected to my own PVE server](screenshot.jpg)
 ## Installation
-`pip install proxmoxer proxcat`
+`pip install requests proxmoxer proxcat`
 
 Or, clone repository and run `pip install .`. 
 
@@ -36,6 +36,12 @@ Or, clone repository and run `pip install .`.
 
 ## Changelog
 see [CHANGELOG.md](CHANGELOG.md).
+
+## Todo
+- [ ] Switch entirely to `pyproject.toml`
+- [ ] More functionality for curses UI (custom sorting, ...)
+- [ ] Invoke VM/CT jobs within app
+- [ ] **Optional headless/daemon mode with WebUI**
 
 ## License
 [MIT](LICENSE)
