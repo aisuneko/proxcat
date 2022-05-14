@@ -45,6 +45,7 @@ see [CHANGELOG.md](CHANGELOG.md).
 
 ## Todo
 - [ ] Switch entirely to `pyproject.toml`
+- [ ] Add optional lm_sensors support for HW monitoring (if ran on host)
 - [ ] More functionality for curses UI (custom sorting, ...)
 - [ ] Invoke VM/CT jobs within app
 - [ ] **Optional headless/daemon mode with WebUI**
