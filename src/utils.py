@@ -37,12 +37,27 @@ def startup():
                         help="Show version and exit", action="store_true")
     parser.add_argument("-l", "--no-lxc-only-info",
                         help="Disable LXC-only info", action="store_true")
+    parser.add_argument("-i", "--interval",
+                        help="Set refresh interval; overrides settings if exists", type=int)
+    parser.add_argument("-s", "--show-sensors",
+                        help="Show host CPU Temperature; requires lm_sensors and PySensors, overrides settings if exists", action="store_true")
     args = parser.parse_args()
     if args.version:
         print(f"v{version}")
         exit(0)
     config = configparser.ConfigParser()
-    path = os.path.expanduser(args.d) if args.config else config_path
+    path = os.path.expanduser(args.config) if args.config else config_path
     no_lxc = True if args.no_lxc_only_info else False
     config.read(path)
-    return config, no_lxc
+    return config, no_lxc, args.interval, args.show_sensors
+
+
+def parse_boolean_config_value(config, section, option):
+    try:
+        return config.getboolean(section, option)
+    except (ValueError, configparser.NoOptionError):
+        return False
+
+
+class SensorsInitError(Exception):
+    pass
