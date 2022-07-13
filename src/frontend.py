@@ -68,7 +68,8 @@ def print_vm_info(stdscr, ptr, vm_status_list, status_bar_item_length, maxc):
     stdscr.attron(curses.color_pair(2))
     for item in vm_status_list:
         if item:
-            item_str = backend.build_vm_info_string(item, status_bar_item_length)
+            item_str = backend.build_vm_info_string(
+                item, status_bar_item_length)
             printline(stdscr, item_str, ptr, maxc)
     stdscr.attroff(curses.color_pair(2))
 

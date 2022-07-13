@@ -7,6 +7,7 @@ try:
 except InportError:
     sensors = None
 
+
 def build_node_info(instance, node, show_sensors):
     node_title = f"Node {node['node']} - {node['status']}"
     if node['status'] == "online":
@@ -23,10 +24,12 @@ def build_node_info(instance, node, show_sensors):
     if show_sensors:
         temp_data = sensors_get_info()
         if temp_data == -1:
-            raise SensorsInitError(f"Chip {core_temp_chip} not found on system.")
-            
+            raise SensorsInitError(
+                f"Chip {core_temp_chip} not found on system.")
+
         elif temp_data == -2:
-            raise SensorsInitError(f"ERROR: Unknown exception occured while fetching temperature data.")
+            raise SensorsInitError(
+                f"ERROR: Unknown exception occured while fetching temperature data.")
         else:
             temp = f"Node CPU Average Temperature: {temp_data} °C"
     return [node_title, cpu, mem, disk] + ([temp] if show_sensors else [])
@@ -54,17 +57,17 @@ def build_single_vm_info(vm, is_qemu_only):
         if vm['maxswap'] == 0:
             if vm['status'] == "running":
                 status_bar_item.extend([f"{convert_size(vm['disk'])}/{convert_size(vm['maxdisk'])}", f"{vm['disk']/vm['maxdisk']:.2%}",
-                                    "", ""])
+                                        "", ""])
             else:
                 status_bar_item.extend([f"({convert_size(vm['maxdisk'])})", "",
-                                    "", ""])
+                                        "", ""])
         else:
             if vm['status'] == "running":
                 status_bar_item.extend([f"{convert_size(vm['disk'])}/{convert_size(vm['maxdisk'])}", f"{vm['disk']/vm['maxdisk']:.2%}",
-                                    f"{convert_size(vm['swap'])}/{convert_size(vm['maxswap'])}", f"{vm['swap']/vm['maxswap']:.2%}"])
+                                        f"{convert_size(vm['swap'])}/{convert_size(vm['maxswap'])}", f"{vm['swap']/vm['maxswap']:.2%}"])
             else:
                 status_bar_item.extend([f"({convert_size(vm['maxdisk'])})", "",
-                                    f"({convert_size(vm['maxswap'])})", ""])
+                                        f"({convert_size(vm['maxswap'])})", ""])
     else:
         status_bar_item.extend(
             [f"({convert_size(vm['maxdisk'])})"])
@@ -122,6 +125,7 @@ def build_bottom_status_bar():
     bottom_statusbar_str = f"proxcat {version} | Local time {local_time}"
     return bottom_statusbar_str
 
+
 def sensors_get_info():
     sensors.init()
     try:
@@ -139,7 +143,7 @@ def sensors_get_info():
                         feature_num = feature_num + 1
         if not has_coretemp_chip:
             return -1
-        avg_temp = avg_temp / feature_num 
+        avg_temp = avg_temp / feature_num
         return round(avg_temp, 2)
     except Exception as e:
         return -2

@@ -51,11 +51,13 @@ def startup():
     config.read(path)
     return config, no_lxc, args.interval, args.show_sensors
 
+
 def parse_boolean_config_value(config, section, option):
     try:
         return config.getboolean(section, option)
     except (ValueError, configparser.NoOptionError):
         return False
+
 
 class SensorsInitError(Exception):
     pass
