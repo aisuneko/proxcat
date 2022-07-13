@@ -53,5 +53,5 @@ def parse_boolean_config_value(config, section, option):
     except (ValueError, configparser.NoOptionError):
         return False
 
-def SensorsInitError(Exception):
+class SensorsInitError(Exception):
     pass
