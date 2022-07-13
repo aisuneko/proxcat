@@ -42,7 +42,7 @@ def startup():
         print(f"v{version}")
         exit(0)
     config = configparser.ConfigParser()
-    path = os.path.expanduser(args.d) if args.config else config_path
+    path = os.path.expanduser(args.config) if args.config else config_path
     no_lxc = True if args.no_lxc_only_info else False
     config.read(path)
     return config, no_lxc
