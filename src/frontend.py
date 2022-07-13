@@ -57,7 +57,8 @@ def print_node_info(stdscr, ptr, data, maxc):
     stdscr.attron(curses.color_pair(1))
     ptr.newline()
     for item in data:
-        printline(stdscr, item, ptr, maxc)
+        if item:
+            printline(stdscr, item, ptr, maxc)
     ptr.newline()
     stdscr.attroff(curses.color_pair(1))
 
@@ -66,8 +67,9 @@ def print_node_info(stdscr, ptr, data, maxc):
 def print_vm_info(stdscr, ptr, vm_status_list, status_bar_item_length, maxc):
     stdscr.attron(curses.color_pair(2))
     for item in vm_status_list:
-        item_str = backend.build_vm_info_string(item, status_bar_item_length)
-        printline(stdscr, item_str, ptr, maxc)
+        if item:
+            item_str = backend.build_vm_info_string(item, status_bar_item_length)
+            printline(stdscr, item_str, ptr, maxc)
     stdscr.attroff(curses.color_pair(2))
 
 
@@ -80,7 +82,7 @@ def print_upper_status_bar(stdscr, width, status_bar_str, node_info_len):
     stdscr.attroff(curses.color_pair(3))
 
 
-def draw(stdscr, instance, update_interval, no_lxc):
+def draw(stdscr, instance, update_interval, show_sensors, no_lxc):
     init(stdscr)
     k = 0
     node_idx = 0
@@ -95,7 +97,7 @@ def draw(stdscr, instance, update_interval, no_lxc):
         elif k == ord('p'):
             node_idx = 0 if node_idx - 1 < 0 else node_idx - 1
         node = nodes[node_idx]
-        node_info_str = backend.build_node_info(instance, node)
+        node_info_str = backend.build_node_info(instance, node, show_sensors)
         vm_list = backend.build_vm_list(instance, node)
         vm_status_list, status_bar_item_length, is_qemu_only = backend.build_vm_info(
             vm_list, no_lxc)

@@ -13,4 +13,5 @@ def start():
                           token_value=account['Token'], verify_ssl=False)
     interval = int(settings['UpdateInterval']
                    ) if settings['UpdateInterval'] else 1000
-    curses.wrapper(frontend.draw, instance, interval, no_lxc)
+    show_sensors = utils.parse_boolean_config_value(config, 'Settings', 'ShowSensors')
+    curses.wrapper(frontend.draw, instance, interval, show_sensors, no_lxc)

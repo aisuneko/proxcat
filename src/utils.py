@@ -46,3 +46,9 @@ def startup():
     no_lxc = True if args.no_lxc_only_info else False
     config.read(path)
     return config, no_lxc
+
+def parse_boolean_config_value(config, section, option):
+    try:
+        return config.getboolean(section, option)
+    except (ValueError, configparser.NoOptionError):
+        return False

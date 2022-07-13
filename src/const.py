@@ -7,3 +7,6 @@ norm_status_bar_strs = ["TYPE", "VMID", "NAME", "STATUS", "%CPU",
                         "MEM", "%MEM", "DISK", "%DISK", "SWAP", "%SWAP", "UPTIME"]
 qemu_status_bar_strs = ["TYPE", "VMID", "NAME", "STATUS", "%CPU",
                         "MEM", "%MEM", "DISK", "UPTIME"]
+
+core_temp_chip = "coretemp-isa-0000"
+avg_temp_feature_label = "Package id 0"

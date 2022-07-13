@@ -1,10 +1,13 @@
 import datetime
 from .utils import convert_size
-from .const import norm_status_bar_strs, qemu_status_bar_strs
+from .const import norm_status_bar_strs, qemu_status_bar_strs, core_temp_chip, avg_temp_feature_label
 from . import __version__ as version
+try:
+    import sensors
+except InportError:
+    sensors = None
 
-
-def build_node_info(instance, node):
+def build_node_info(instance, node, show_sensors):
     node_title = f"Node {node['node']} - {node['status']}"
     if node['status'] == "online":
         node_uptime = str(
@@ -17,7 +20,15 @@ def build_node_info(instance, node):
     cpu = f"CPU Usage: {node['cpu']:.2%} of {node['maxcpu']} CPUs"
     mem = f"Memory Usage: {node['mem']/node['maxmem']:.2%} | {convert_size(node['mem'])} of {convert_size(node['maxmem'])}"
     disk = f"Bootdisk Usage: {node['disk']/node['maxdisk']:.2%} | {convert_size(node['disk'])} of {convert_size(node['maxdisk'])}"
-    return [node_title, cpu, mem, disk]
+    if show_sensors:
+        temp_data = sensors_get_info()
+        # if temp_data == -1:
+            # print(f"ERROR: Chip {core_temp_chip} not found on system.")
+        # elif temp_data == -2:
+            # print(f"ERROR: Unknown exception occured while fetching temperature data.")
+        # else:
+        temp = f"Node CPU Average Temperature: {temp_data} °C"
+    return [node_title, cpu, mem, disk] + ([temp] if show_sensors else [])
 
 
 def build_vm_list(instance, node):
@@ -39,11 +50,19 @@ def build_single_vm_info(vm, is_qemu_only):
         status_bar_item = [identifier, vm['vmid'], vm['name'],
                            vm['status'], f"({vm['cpus']})", f"({convert_size(vm['maxmem'])})", ""]
     if identifier == "lxc" and not is_qemu_only:  # container specific disk info
-        if vm['status'] == "running":
-            status_bar_item.extend([f"{convert_size(vm['disk'])}/{convert_size(vm['maxdisk'])}", f"{vm['disk']/vm['maxdisk']:.2%}",
-                                    f"{convert_size(vm['swap'])}/{convert_size(vm['maxswap'])}", f"{vm['swap']/vm['maxswap']:.2%}"])
+        if vm['maxswap'] == 0:
+            if vm['status'] == "running":
+                status_bar_item.extend([f"{convert_size(vm['disk'])}/{convert_size(vm['maxdisk'])}", f"{vm['disk']/vm['maxdisk']:.2%}",
+                                    "", ""])
+            else:
+                status_bar_item.extend([f"({convert_size(vm['maxdisk'])})", "",
+                                    "", ""])
         else:
-            status_bar_item.extend([f"({convert_size(vm['maxdisk'])})", "",
+            if vm['status'] == "running":
+                status_bar_item.extend([f"{convert_size(vm['disk'])}/{convert_size(vm['maxdisk'])}", f"{vm['disk']/vm['maxdisk']:.2%}",
+                                    f"{convert_size(vm['swap'])}/{convert_size(vm['maxswap'])}", f"{vm['swap']/vm['maxswap']:.2%}"])
+            else:
+                status_bar_item.extend([f"({convert_size(vm['maxdisk'])})", "",
                                     f"({convert_size(vm['maxswap'])})", ""])
     else:
         status_bar_item.extend(
@@ -101,3 +120,27 @@ def build_bottom_status_bar():
     local_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S %Z")
     bottom_statusbar_str = f"proxcat {version} | Local time {local_time}"
     return bottom_statusbar_str
+
+def sensors_get_info():
+    sensors.init()
+    try:
+        has_coretemp_chip = False
+        for chip in sensors.iter_detected_chips():
+            if chip.__str__() == core_temp_chip:
+                has_coretemp_chip = True
+                avg_temp = feature_num = 0
+                for feature in chip:
+                    cur_temp = feature.get_value()
+                    if feature.label == avg_temp_feature_label:
+                        return cur_temp
+                    else:
+                        avg_temp = avg_temp + cur_temp
+                        feature_num = feature_num + 1
+        if not has_coretemp_chip:
+            return -1
+        avg_temp = avg_temp / feature_num 
+        return round(avg_temp, 2)
+    except Exception as e:
+        return -2
+    finally:
+        sensors.cleanup()
