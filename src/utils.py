@@ -52,3 +52,6 @@ def parse_boolean_config_value(config, section, option):
         return config.getboolean(section, option)
     except (ValueError, configparser.NoOptionError):
         return False
+
+def SensorsInitError(Exception):
+    pass

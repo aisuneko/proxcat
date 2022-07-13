@@ -1,5 +1,5 @@
 import datetime
-from .utils import convert_size
+from .utils import convert_size, SensorsInitError
 from .const import norm_status_bar_strs, qemu_status_bar_strs, core_temp_chip, avg_temp_feature_label
 from . import __version__ as version
 try:
@@ -22,12 +22,13 @@ def build_node_info(instance, node, show_sensors):
     disk = f"Bootdisk Usage: {node['disk']/node['maxdisk']:.2%} | {convert_size(node['disk'])} of {convert_size(node['maxdisk'])}"
     if show_sensors:
         temp_data = sensors_get_info()
-        # if temp_data == -1:
-            # print(f"ERROR: Chip {core_temp_chip} not found on system.")
-        # elif temp_data == -2:
-            # print(f"ERROR: Unknown exception occured while fetching temperature data.")
-        # else:
-        temp = f"Node CPU Average Temperature: {temp_data} °C"
+        if temp_data == -1:
+            raise SensorsInitError(f"Chip {core_temp_chip} not found on system.")
+            
+        elif temp_data == -2:
+            raise SensorsInitError(f"ERROR: Unknown exception occured while fetching temperature data.")
+        else:
+            temp = f"Node CPU Average Temperature: {temp_data} °C"
     return [node_title, cpu, mem, disk] + ([temp] if show_sensors else [])
 
 
