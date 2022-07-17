@@ -5,6 +5,7 @@ A htop-like status monitor for Proxmox VE servers, powered by python curses, wit
 ![connected to my own PVE server](screenshot.jpg)
 ## Installation
 `pip install requests proxmoxer proxcat`
+
 (optional) `pip install PySensors` for CPU temperature info support (only when ran directly on PVE host)
 
 Or, clone repository and run `pip install .`. 
@@ -51,7 +52,7 @@ see [CHANGELOG.md](CHANGELOG.md).
 ## Todo
 - [ ] Switch entirely to `pyproject.toml`
 - [x] Add optional lm_sensors support for HW monitoring (if ran on host)
-- [ ] Change time display to difference between host and local client
+- [ ] Change time display to show difference between host and local client
 - [ ] More functionality for curses UI (custom sorting, ...)
 - [ ] Invoke VM/CT jobs within app
 - [ ] **Optional headless/daemon mode with WebUI**
